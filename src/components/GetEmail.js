@@ -1,12 +1,26 @@
 import React, {Component} from 'react';
 import {RadioButton} from 'primereact/radiobutton';
-import {Col, Row} from 'react-bootstrap';
+import {InputText} from 'primereact/inputtext';
+import {Col, Row, Button} from 'react-bootstrap';
 import './GetEmail.css';
+import axios from 'axios';
 
 class GetEmail extends Component {
 
     state = {
+        adSoyad: ""
+    };
 
+    handleButtonClick = () => {
+        console.log("handle button click");
+        axios.post("http://localhost:8080/gonderileceklink", this.state)
+            .then((result) => {
+            console.log("islem başarılı");
+        })
+        .catch((error) => {
+            console.log("islem başarısız");
+            console.log(error);
+        });
     };
 
     render(){
@@ -26,6 +40,17 @@ class GetEmail extends Component {
                         </div>
                     </div>
                 </Col>
+            </Row>
+            <Row hidden={this.state.isimGizliMi !== "Hayir"} >
+                <Col>Ad-Soyad</Col>
+                <Col>
+                    <InputText value={this.state.adSoyad} onChange={(e) => {this.setState({adSoyad: e.target.value})}} />
+                </Col>
+            </Row>
+            <Row >
+                <Col></Col>
+                <Col><Button onClick={() => {this.handleButtonClick()}} >Gönder</Button></Col>
+
             </Row>
 
 
