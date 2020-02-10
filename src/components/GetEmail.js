@@ -5,16 +5,28 @@ import {Col, Row, Button} from 'react-bootstrap';
 import './GetEmail.css';
 import axios from 'axios';
 import FileUpload from "../core/FileUpload";
+import MsgReader from '@freiraum/msgreader';
+
+var fs = require('fs');
 
 class GetEmail extends Component {
 
     state = {
         adSoyad: "",
         file: null,
+        fileBase64: null,
     };
 
     handleButtonClick = () => {
         console.log("handle button click");
+
+
+        let msgFileBuffer = fs.readFileSync(this.state.file);
+        let testMsg = new MsgReader(msgFileBuffer);
+        let testMsgInfo = testMsg.getFileData();
+        console.log(testMsgInfo);
+
+
         axios.post("http://localhost:8080/gonderileceklink", this.state)
             .then((result) => {
             console.log("islem başarılı");
@@ -52,7 +64,7 @@ class GetEmail extends Component {
             <Row >
                 <Col>Dosya</Col>
                 <Col>
-                    <FileUpload value={this.state.file} onChange={(newFile) => {this.setState({file: newFile})}}
+                    <FileUpload value={this.state.fileBase64} onChange={(newFileBase64, newFile) => {this.setState({fileBase64: newFileBase64, file: newFile})}}
                     style={{width: "450px"}}/>
                 </Col>
             </Row>

@@ -122,12 +122,12 @@ export default class FileUpload extends Component {
                 }
             }
             if (tempFiles.length === 1) {
-                this.props.onChange(tempFiles[0]);
+                this.props.onChange(tempFiles[0], event.target.files[0]);
             } else {
                 if (tempFiles.length === 0) {
-                    this.props.onChange(null);
+                    this.props.onChange(null, null);
                 } else {
-                    this.props.onChange(tempFiles);
+                    this.props.onChange(tempFiles, event.target.files);
                 }
             }
         } else {
