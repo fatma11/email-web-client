@@ -4,11 +4,13 @@ import {InputText} from 'primereact/inputtext';
 import {Col, Row, Button} from 'react-bootstrap';
 import './GetEmail.css';
 import axios from 'axios';
+import FileUpload from "../core/FileUpload";
 
 class GetEmail extends Component {
 
     state = {
-        adSoyad: ""
+        adSoyad: "",
+        file: null,
     };
 
     handleButtonClick = () => {
@@ -48,8 +50,16 @@ class GetEmail extends Component {
                 </Col>
             </Row>
             <Row >
+                <Col>Dosya</Col>
+                <Col>
+                    <FileUpload value={this.state.file} onChange={(newFile) => {this.setState({file: newFile})}}
+                    style={{width: "450px"}}/>
+                </Col>
+            </Row>
+            <Row >
                 <Col></Col>
-                <Col><Button onClick={() => {this.handleButtonClick()}} >Gönder</Button></Col>
+                <Col><Button onClick={() => {this.handleButtonClick()}}
+                             variant="primary" >Gönder</Button></Col>
 
             </Row>
 

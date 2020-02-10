@@ -1,0 +1,73 @@
+.FileUpload {
+    border: solid 2px #000000;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.FileUpload .selectedLabel {
+    color: #037bc6;
+}
+
+.FileUpload .selectedLabel:hover {
+    color: #0159a4;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.FileUpload .noSelectionLabel {
+    color: #e08000;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.FileUpload .icon {
+    color: #037bc6;
+}
+
+.FileUpload .icon:hover {
+    color: #0159a4;
+    cursor: pointer;
+}
+
+.FileUpload .imagePreview {
+    max-height: 50px;
+    max-width: 100px;
+    vertical-align: middle;
+}
+
+.FileUpload .imagePreview:hover {
+    cursor: pointer;
+}
+
+.FileUpload .selectedUL {
+    padding-left: 0;
+}
+
+.FileUpload .selectedLI {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 5px;
+}
+
+.FileUpload .imagePreviewDiv {
+    width: 100px;
+    float: left;
+    text-align: center;
+    align-self: center;
+}
+
+.FileUpload .labelDiv {
+     align-self: center;
+ }
+
+.FileUpload .closeDiv {
+    width: 15px;
+    float: right;
+    text-align: center;
+    align-self: center;
+}
