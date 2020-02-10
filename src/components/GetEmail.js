@@ -6,8 +6,9 @@ import './GetEmail.css';
 import axios from 'axios';
 import FileUpload from "../core/FileUpload";
 import MsgReader from '@freiraum/msgreader';
+import fs from 'fs';
 
-var fs = require('fs');
+//var fs = require('fs');
 
 class GetEmail extends Component {
 
@@ -21,20 +22,27 @@ class GetEmail extends Component {
         console.log("handle button click");
 
 
-        let msgFileBuffer = fs.readFileSync(this.state.file);
-        let testMsg = new MsgReader(msgFileBuffer);
-        let testMsgInfo = testMsg.getFileData();
-        console.log(testMsgInfo);
+        //let msgFileBuffer = fs.readFileSync(this.state.file);
+        var fileReader = new FileReader();
+        fileReader.onload = (evt) => {
+            let testMsg = new MsgReader(evt.target.result);
+            let testMsgInfo = testMsg.getFileData();
+            console.log(testMsgInfo);
+
+            let postObject = {...this.state, testMsgInfo};
+
+            axios.post("http://localhost:8080/gonderileceklink", postObject)
+                .then((result) => {
+                    console.log("islem başarılı");
+                })
+                .catch((error) => {
+                    console.log("islem başarısız");
+                    console.log(error);
+                });
+        };
+        fileReader.readAsArrayBuffer(this.state.file);
 
 
-        axios.post("http://localhost:8080/gonderileceklink", this.state)
-            .then((result) => {
-            console.log("islem başarılı");
-        })
-        .catch((error) => {
-            console.log("islem başarısız");
-            console.log(error);
-        });
     };
 
     render(){
