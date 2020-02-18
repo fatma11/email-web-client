@@ -1,3 +1,27 @@
 .isim-radio-button {
     display: flex;
+    margin-left: 10px;
+}
+
+.kelimeler {
+    color: #000000;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.myInput {
+    float: left;
+    width: 250px;
+}
+
+.myRow {
+    margin-bottom: 10px;
+}
+
+.myPanel{
+    margin-top: 10px;
+    width: 1000px;
+    margin-left: 350px;
 }
