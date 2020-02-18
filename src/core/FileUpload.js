@@ -173,7 +173,7 @@ export default class FileUpload extends Component {
                 temp.push(<li key={index} className="selectedLI">
                     {preview}
                     <div className="labelDiv"><label className="selectedLabel" onClick={()=> downloadBlob(base64ToBlob(item.bytes, item.mimeType), item.fileName)}>{item.fileName}</label></div>
-                    <div className="closeDiv" onClick={()=> this.fileDelete(item)} ><span>x</span></div>
+                    <div className="closeDiv" onClick={()=> this.fileDelete(item)} ><span style={{cursor: "pointer"}} >x</span></div>
                 </li>);
             });
             return temp;
