@@ -7,8 +7,7 @@
     color: #000000;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 14px;
 }
 
 .myInput {
@@ -18,10 +17,17 @@
 
 .myRow {
     margin-bottom: 10px;
+    text-align: left;
 }
 
 .myPanel{
     margin-top: 10px;
     width: 1000px;
-    margin-left: 350px;
+    margin-left: 440px;
+    text-align: left;
+    font-size: 16px;
+}
+
+.submitButton{
+    text-align: right;
 }

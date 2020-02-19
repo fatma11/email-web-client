@@ -57,7 +57,6 @@ class GetEmail extends Component {
     };
 
     sendGatheredInfo = (parsedEmailResult) => {
-        // bunu neden yapmamız gerekti
         let postObject = {...this.state, parsedEmailResult};
 
         axios.post("http://localhost:8080/gonderileceklink", postObject)
@@ -72,9 +71,9 @@ class GetEmail extends Component {
 
     render() {
         return <div>
-            <Panel className="myPanel" bordered>
+            <Panel className="myPanel" bordered header={"This tool automatically removes your personal data (email address, name etc.)"}>
                 <Row className="myRow">
-                    <Col xs={6} md={6} className="kelimeler">Would you like to hide your name and surname?</Col>
+                    <Col xs={6} md={6} className="kelimeler">If you allow us to access you for further enquiries regarding GDPR and Blockchain, please click the consent button</Col>
                     <Col xs={6} md={4}>
                         <div className="isim-radio-button">
                             <div className="isim-radio-button">
@@ -93,13 +92,22 @@ class GetEmail extends Component {
                         </div>
                     </Col>
                 </Row>
-                <Row className="myRow" hidden={this.state.isimGizliMi !== "Hayir"}>
+                <Row className="myRow" hidden={this.state.isimGizliMi !== "Evet"}>
                     <Col xs={6} md={6} className="kelimeler">Name-Surname</Col>
                     <Col xs={6} md={4}>
                         <InputText className="myInput" value={this.state.adSoyad} onChange={(e) => {
                             this.setState({adSoyad: e.target.value})
                         }}
                           />
+                    </Col>
+                </Row>
+                <Row className="myRow">
+                    <Col xs={6} md={6} className="kelimeler">Name of cryptocurrency</Col>
+                    <Col xs={6} md={4}>
+                        <InputText className="myInput" value={this.state.cryptocurrency} onChange={(e) => {
+                            this.setState({cryptocurrency: e.target.value})
+                        }}
+                        />
                     </Col>
                 </Row>
                 <Row className="myRow">
@@ -111,7 +119,7 @@ class GetEmail extends Component {
                                     style={{width: "250px"}}/>
                     </Col>
                 </Row>
-                <Row>
+                <Row className="submitButton">
                     <Col><Button onClick={() => {
                         this.handleButtonClick()
                     }} variant="primary">Submit</Button></Col>
