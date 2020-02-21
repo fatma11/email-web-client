@@ -168,7 +168,7 @@ export default class FileUpload extends Component {
                 if (item.mimeType.includes("image")) {
                     preview = <div className="imagePreviewDiv"><img className="imagePreview" src={fileURL} alt="preview" onClick={() => window.open(fileURL)}/></div>
                 } else {
-                    preview = <span style={{display: "unset", margin: "50px"}}/>
+                    preview = <span style={{display: "unset", marginBottom: "50px"}}/>
                 }
                 temp.push(<li key={index} className="selectedLI">
                     {preview}

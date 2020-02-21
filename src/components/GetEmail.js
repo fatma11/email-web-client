@@ -8,6 +8,9 @@ import FileUpload from "../core/FileUpload";
 import MsgReader from '@freiraum/msgreader';
 import {Panel} from 'primereact/panel';
 import emlformat from 'eml-format';
+import {MultiSelect} from 'primereact/multiselect';
+import {Growl} from 'primereact/growl';
+
 
 function ab2str(buf) {
     return new TextDecoder("utf-8").decode(buf);
@@ -32,7 +35,7 @@ class GetEmail extends Component {
                 let strOfEml = ab2str(fileResult);
                 emlformat.read(strOfEml, (error, data) => {
                     if (error){
-                        return console.error(error);
+                        this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
                     }
                     this.sendGatheredInfo(data);
                 });
@@ -44,14 +47,14 @@ class GetEmail extends Component {
                 this.sendGatheredInfo(data);
             }
             else {
-                console.error("File is neither msg nor eml");
+                this.growl.show({severity: 'error', summary: 'Error', detail: "File is neither msg nor eml"});
             }
         };
         if(this.state.file) {
             fileReader.readAsArrayBuffer(this.state.file);
         }
         else {
-            console.error("File is not uploaded");
+            this.growl.show({severity: 'error', summary: 'Error', detail: "File is not uploaded"});
         }
 
     };
@@ -61,16 +64,24 @@ class GetEmail extends Component {
 
         axios.post("http://localhost:8080/gonderileceklink", postObject)
             .then((result) => {
-                console.log("islem başarılı");
+                this.growl.show({severity: 'success', summary: 'Başarılı', detail: "İşlem Başarılı"});
+                this.setState({basariylaGonderdi: true});
             })
             .catch((error) => {
-                console.log("islem başarısız");
-                console.log(error);
+                this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
             });
-    }
+    };
 
     render() {
-        return <div>
+        const cryptocurrencies = require('cryptocurrencies');
+
+        const valuelar = Object.values(cryptocurrencies);
+
+        const valueDeger = valuelar.map((val) => {
+            return {label: ""+ val, value: val};
+        });
+
+        let icerik = <div>
             <Panel className="myPanel" bordered header={"This tool automatically removes your personal data (email address, name etc.)"}>
                 <Row className="myRow">
                     <Col xs={6} md={6} className="kelimeler">If you allow us to access you for further enquiries regarding GDPR and Blockchain, please click the consent button</Col>
@@ -93,21 +104,18 @@ class GetEmail extends Component {
                     </Col>
                 </Row>
                 <Row className="myRow" hidden={this.state.isimGizliMi !== "Evet"}>
-                    <Col xs={6} md={6} className="kelimeler">Name-Surname</Col>
+                    <Col xs={6} md={6} className="kelimeler">Full Name</Col>
                     <Col xs={6} md={4}>
                         <InputText className="myInput" value={this.state.adSoyad} onChange={(e) => {
                             this.setState({adSoyad: e.target.value})
                         }}
-                          />
+                        />
                     </Col>
                 </Row>
                 <Row className="myRow">
-                    <Col xs={6} md={6} className="kelimeler">Name of cryptocurrency</Col>
+                    <Col xs={6} md={6} className="kelimeler">Distributed Ledger Systems</Col>
                     <Col xs={6} md={4}>
-                        <InputText className="myInput" value={this.state.cryptocurrency} onChange={(e) => {
-                            this.setState({cryptocurrency: e.target.value})
-                        }}
-                        />
+                        <MultiSelect className="myInput" value={this.state.cryptocurrencies2} options={valueDeger} onChange={(e) => this.setState({cryptocurrencies2: e.value})} filter={true} placeholder="Choose"  />
                     </Col>
                 </Row>
                 <Row className="myRow">
@@ -126,6 +134,16 @@ class GetEmail extends Component {
 
                 </Row>
             </Panel>
+            <Col className="uyari">If you don't know how to convert your email to an eml or msg file, please forward your email to [your email address].</Col>
+        </div>;
+        if(this.state.basariylaGonderdi){
+            icerik = <div>basarili</div>;
+        }
+
+
+        return <div>
+            <Growl ref={(el) => this.growl = el} />
+            {icerik}
         </div>;
     }
 }

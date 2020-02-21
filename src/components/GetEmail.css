@@ -16,7 +16,7 @@
 }
 
 .myRow {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     text-align: left;
 }
 
@@ -30,4 +30,14 @@
 
 .submitButton{
     text-align: right;
+}
+
+.uyari{
+    margin-top: 20px;
+    width: 1000px;
+    margin-left: 430px;
+    text-align: left;
+    font-size: 16px;
+    color: #e08000;
+    font-weight: bold;
 }
