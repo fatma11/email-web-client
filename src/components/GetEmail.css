@@ -41,3 +41,17 @@
     color: #e08000;
     font-weight: bold;
 }
+
+.basarili {
+    font-size: calc(13px + 2vmin);
+    font-weight: bold;
+    text-align: center;
+    margin-top: 200px;
+}
+
+.thanks {
+    font-size: calc(13px + 2vmin);
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}

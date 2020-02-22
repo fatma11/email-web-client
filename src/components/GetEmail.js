@@ -8,9 +8,9 @@ import FileUpload from "../core/FileUpload";
 import MsgReader from '@freiraum/msgreader';
 import {Panel} from 'primereact/panel';
 import emlformat from 'eml-format';
-import {MultiSelect} from 'primereact/multiselect';
 import {Growl} from 'primereact/growl';
-
+import {Checkbox} from 'primereact/checkbox';
+import Select from 'react-select';
 
 function ab2str(buf) {
     return new TextDecoder("utf-8").decode(buf);
@@ -22,6 +22,7 @@ class GetEmail extends Component {
         adSoyad: "",
         file: null,
         fileBase64: null,
+        basariylaGonderdi: false
     };
 
     handleButtonClick = () => {
@@ -81,6 +82,31 @@ class GetEmail extends Component {
             return {label: ""+ val, value: val};
         });
 
+        let giris = <div>
+            <Panel className="myPanel" bordered header={"The our purpose of the research"}>
+                <Row className="myRow">
+                    <Col className="kelimeler">
+                        We want to better understand how  blockchain service providers and developers
+                        communicate GDPR to their users  via email and how their users perceive GDPR and such email communications. A better
+                        understanding will help the whole sector to find better ways to make blockchain systems more GDPR friendly.
+                        We will not do "name and shame" thing.
+                    </Col>
+                </Row>
+                <Row >
+                    <Col xs={6} md={7} className="kelimeler">If you want to share your mail with us, please click the checkbox to consent.</Col>
+                    <Col> <Checkbox onChange={e => this.setState({checked: e.checked})} checked={this.state.checked}></Checkbox></Col>
+                </Row>
+                <Row className="submitButton">
+                    <Col><Button onClick={() => {
+                        if(this.state.checked === true){
+                            this.setState({next : true})
+                        }
+                    }} variant="primary">Next</Button></Col>
+
+                </Row>
+            </Panel>
+        </div>;
+
         let icerik = <div>
             <Panel className="myPanel" bordered header={"This tool automatically removes your personal data (email address, name etc.)"}>
                 <Row className="myRow">
@@ -114,8 +140,21 @@ class GetEmail extends Component {
                 </Row>
                 <Row className="myRow">
                     <Col xs={6} md={6} className="kelimeler">Distributed Ledger Systems</Col>
+                    <Col md="auto">
+                        <Select options={valueDeger} isMulti={true} className="myInput"/>
+                    </Col>
+                    <Col>
+                        <Checkbox onChange={e => this.setState({checkedSystem: e.checked})} checked={this.state.checkedSystem}></Checkbox>
+                        <label htmlFor="cb1" className="p-checkbox-label">Other</label>
+                    </Col>
+                </Row>
+                <Row className="myRow" hidden={this.state.checkedSystem !== true}>
+                    <Col xs={6} md={6} ></Col>
                     <Col xs={6} md={4}>
-                        <MultiSelect className="myInput" value={this.state.cryptocurrencies2} options={valueDeger} onChange={(e) => this.setState({cryptocurrencies2: e.value})} filter={true} placeholder="Choose"  />
+                        <InputText className="myInput" value={this.state.checkedSystemName} onChange={(e) => {
+                            this.setState({checkedSystemName: e.target.value})
+                        }}
+                        />
                     </Col>
                 </Row>
                 <Row className="myRow">
@@ -136,14 +175,28 @@ class GetEmail extends Component {
             </Panel>
             <Col className="uyari">If you don't know how to convert your email to an eml or msg file, please forward your email to [your email address].</Col>
         </div>;
+
+        let son  = <div>
+                <Row>
+                    <Col className="basarili">The operation is succesfully completed. </Col>
+                </Row>
+                 <Row>
+                     <Col className="thanks">Thank you for attention. </Col>
+                 </Row>
+        </div>;
+
         if(this.state.basariylaGonderdi){
-            icerik = <div>basarili</div>;
-        }
+            giris = son;
+        };
+
+        if(this.state.next && !this.state.basariylaGonderdi){
+            giris = icerik;
+        } ;
 
 
         return <div>
             <Growl ref={(el) => this.growl = el} />
-            {icerik}
+            {giris}
         </div>;
     }
 }
