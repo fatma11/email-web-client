@@ -26,7 +26,6 @@ class GetEmail extends Component {
     };
 
     handleButtonClick = () => {
-        console.log("handle button click");
 
         var fileReader = new FileReader();
         fileReader.onload = (evt) => {
@@ -45,6 +44,7 @@ class GetEmail extends Component {
             else if(fileName.endsWith(".msg")) {
                 let msg = new MsgReader(evt.target.result);
                 let data = msg.getFileData();
+             //   console.log(this.getMsgDate(data.headers));
                 this.sendGatheredInfo(data);
             }
             else {
@@ -60,9 +60,39 @@ class GetEmail extends Component {
 
     };
 
+    getMsgDate = (rawHeaders) => {
+        // Example for the Date header
+        var headers = this.parseHeaders(rawHeaders);
+        if (!headers['Date']){
+            return '-';
+        }
+        return new Date(headers['Date']);
+    }
+/*
+    isSupportedFileAPI() {
+        return window.File && window.FileReader && window.FileList && window.Blob;
+    }
+
+    formatEmail = (data) =>{
+        return data.name ? data.name + " [" + data.email + "]" : data.email;
+    }
+
+    parseHeaders = (headers) => {
+        var parsedHeaders = {};
+        if (!headers) {
+            return parsedHeaders;
+        }
+        var headerRegEx = /(.*)\: (.*)/g;
+        while (m = headerRegEx.exec(headers)) {
+            // todo: Pay attention! Header can be presented many times (e.g. Received). Handle it, if needed!
+            this.parsedHeaders[m[1]] = m[2];
+        }
+        return parsedHeaders;
+    }*/
+
     sendGatheredInfo = (parsedEmailResult) => {
         let postObject = {...this.state, parsedEmailResult};
-
+        console.log(postObject)
         axios.post("http://localhost:8080/gonderileceklink", postObject)
             .then((result) => {
                 this.growl.show({severity: 'success', summary: 'Başarılı', detail: "İşlem Başarılı"});
