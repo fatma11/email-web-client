@@ -44,7 +44,7 @@ class GetEmail extends Component {
             else if(fileName.endsWith(".msg")) {
                 let msg = new MsgReader(evt.target.result);
                 let data = msg.getFileData();
-             //   console.log(this.getMsgDate(data.headers));
+                console.log(this.getMsgDate(data.headers));
                 this.sendGatheredInfo(data);
             }
             else {
@@ -68,7 +68,7 @@ class GetEmail extends Component {
         }
         return new Date(headers['Date']);
     }
-/*
+
     isSupportedFileAPI() {
         return window.File && window.FileReader && window.FileList && window.Blob;
     }
@@ -78,17 +78,18 @@ class GetEmail extends Component {
     }
 
     parseHeaders = (headers) => {
-        var parsedHeaders = {};
+        let parsedHeaders = {};
         if (!headers) {
             return parsedHeaders;
         }
-        var headerRegEx = /(.*)\: (.*)/g;
+        let headerRegEx = /(.*)\: (.*)/g;
+        let m = undefined;
         while (m = headerRegEx.exec(headers)) {
             // todo: Pay attention! Header can be presented many times (e.g. Received). Handle it, if needed!
-            this.parsedHeaders[m[1]] = m[2];
+            parsedHeaders[m[1]] = m[2];
         }
         return parsedHeaders;
-    }*/
+    }
 
     sendGatheredInfo = (parsedEmailResult) => {
         let postObject = {...this.state, parsedEmailResult};
