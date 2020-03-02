@@ -11,18 +11,43 @@ import emlformat from 'eml-format';
 import {Growl} from 'primereact/growl';
 import {Checkbox} from 'primereact/checkbox';
 import Select from 'react-select';
+import firebase from './firebase'
 
 function ab2str(buf) {
     return new TextDecoder("utf-8").decode(buf);
 }
 
 class GetEmail extends Component {
-
     state = {
         adSoyad: "",
+        checkedSystemName: "",
         file: null,
         fileBase64: null,
         basariylaGonderdi: false
+    };
+
+    addNewEmail = (body, distributedLedgerSystem, filename, fullname, recipientEmails, senderDate, senderEmail, senderName, subject) => {
+        console.log(body);
+        console.log(distributedLedgerSystem);
+        console.log(filename);
+        console.log(fullname);
+        console.log(recipientEmails);
+        console.log(senderDate);
+        console.log(senderEmail);
+        console.log(senderName);
+        console.log(subject);
+
+        firebase.firestore().collection('emails').add({
+            body: body,
+            distributed_ledger_system: distributedLedgerSystem,
+            filename: filename,
+            fullname: fullname,
+            recipient_emails: recipientEmails,
+            sender_date: senderDate,
+            sender_email: senderEmail,
+            sender_name: senderName,
+            subject: subject
+        }).catch(error => console.log(error))
     };
 
     handleButtonClick = () => {
@@ -44,7 +69,6 @@ class GetEmail extends Component {
             else if(fileName.endsWith(".msg")) {
                 let msg = new MsgReader(evt.target.result);
                 let data = msg.getFileData();
-                console.log(this.getMsgDate(data.headers));
                 this.sendGatheredInfo(data);
             }
             else {
@@ -61,21 +85,12 @@ class GetEmail extends Component {
     };
 
     getMsgDate = (rawHeaders) => {
-        // Example for the Date header
         var headers = this.parseHeaders(rawHeaders);
         if (!headers['Date']){
             return '-';
         }
         return new Date(headers['Date']);
-    }
-
-    isSupportedFileAPI() {
-        return window.File && window.FileReader && window.FileList && window.Blob;
-    }
-
-    formatEmail = (data) =>{
-        return data.name ? data.name + " [" + data.email + "]" : data.email;
-    }
+    };
 
     parseHeaders = (headers) => {
         let parsedHeaders = {};
@@ -85,24 +100,33 @@ class GetEmail extends Component {
         let headerRegEx = /(.*)\: (.*)/g;
         let m = undefined;
         while (m = headerRegEx.exec(headers)) {
-            // todo: Pay attention! Header can be presented many times (e.g. Received). Handle it, if needed!
             parsedHeaders[m[1]] = m[2];
         }
         return parsedHeaders;
-    }
+    };
 
     sendGatheredInfo = (parsedEmailResult) => {
         let postObject = {...this.state, parsedEmailResult};
-        console.log(postObject)
-        axios.post("http://localhost:8080/gonderileceklink", postObject)
-            .then((result) => {
-                this.growl.show({severity: 'success', summary: 'Başarılı', detail: "İşlem Başarılı"});
-                this.setState({basariylaGonderdi: true});
-            })
-            .catch((error) => {
-                this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
-            });
+
+        let recipients = postObject.parsedEmailResult.recipients.map((item) => item.email);
+
+        this.addNewEmail(postObject.parsedEmailResult.body.toString(), this.state.checkedSystemName, postObject.file.name.toString(), this.state.adSoyad.toString(), recipients, this.getMsgDate(postObject.parsedEmailResult.headers).toString(), postObject.parsedEmailResult.senderEmail.toString(), postObject.parsedEmailResult.subject.toString());
+
+            /* axios.post("http://localhost:8080/gonderileceklink", postObject)
+                 .then((result) => {
+                     this.growl.show({severity: 'success', summary: 'Başarılı', detail: "İşlem Başarılı"});
+                     this.setState({basariylaGonderdi: true});
+                 })
+                 .catch((error) => {
+                     this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
+                 });*/
     };
+
+    handleCheckedSystemNameSelect = (e) => {
+        let valueMap = e.map((item) => item.value);
+        this.setState({checkedSystemName: valueMap});
+    };
+
 
     render() {
         const cryptocurrencies = require('cryptocurrencies');
@@ -172,7 +196,7 @@ class GetEmail extends Component {
                 <Row className="myRow">
                     <Col xs={6} md={6} className="kelimeler">Distributed Ledger Systems</Col>
                     <Col md="auto">
-                        <Select options={valueDeger} isMulti={true} className="myInput"/>
+                        <Select options={valueDeger} isMulti={true} className="myInput" onChange={e => this.handleCheckedSystemNameSelect(e)}/>
                     </Col>
                     <Col>
                         <Checkbox onChange={e => this.setState({checkedSystem: e.checked})} checked={this.state.checkedSystem}></Checkbox>
