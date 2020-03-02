@@ -27,27 +27,19 @@ class GetEmail extends Component {
     };
 
     addNewEmail = (body, distributedLedgerSystem, filename, fullname, recipientEmails, senderDate, senderEmail, senderName, subject) => {
-        console.log(body);
-        console.log(distributedLedgerSystem);
-        console.log(filename);
-        console.log(fullname);
-        console.log(recipientEmails);
-        console.log(senderDate);
-        console.log(senderEmail);
-        console.log(senderName);
-        console.log(subject);
-
         firebase.firestore().collection('emails').add({
-            body: body,
+            body: "\"" + body + "\"",
             distributed_ledger_system: distributedLedgerSystem,
-            filename: filename,
-            fullname: fullname,
+            filename: "\"" + filename + "\"",
+            fullname: "\"" + fullname + "\"",
             recipient_emails: recipientEmails,
-            sender_date: senderDate,
-            sender_email: senderEmail,
-            sender_name: senderName,
-            subject: subject
-        }).catch(error => console.log(error))
+            sender_date: "\"" + senderDate + "\"",
+            sender_email: "\"" + senderEmail + "\"",
+            sender_name: "\"" + senderName + "\"",
+            subject: "\"" + subject + "\""
+        }).catch((error) => {
+            this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
+        });
     };
 
     handleButtonClick = () => {
