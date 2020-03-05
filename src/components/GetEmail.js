@@ -20,30 +20,43 @@ function ab2str(buf) {
 class GetEmail extends Component {
     state = {
         adSoyad: "",
-        checkedSystemName: "",
+        checkedSystemName: [],
         file: null,
         fileBase64: null,
         basariylaGonderdi: false
     };
 
     addNewEmail = (body, distributedLedgerSystem, filename, fullname, recipientEmails, senderDate, senderEmail, senderName, subject) => {
+
+        console.log(body)
+        console.log(distributedLedgerSystem)
+        console.log(filename)
+        console.log(fullname)
+        console.log(recipientEmails)
+        console.log(senderDate)
+        console.log(senderEmail)
+        console.log(senderName)
+        console.log(subject)
+
+
         firebase.firestore().collection('emails').add({
-            body: "\"" + body + "\"",
+            body: body,
             distributed_ledger_system: distributedLedgerSystem,
-            filename: "\"" + filename + "\"",
-            fullname: "\"" + fullname + "\"",
+            filename: filename ,
+            fullname: fullname ,
             recipient_emails: recipientEmails,
-            sender_date: "\"" + senderDate + "\"",
-            sender_email: "\"" + senderEmail + "\"",
-            sender_name: "\"" + senderName + "\"",
-            subject: "\"" + subject + "\""
+            sender_date: senderDate ,
+            sender_email: senderEmail ,
+            sender_name: senderName ,
+            subject: subject
         }).catch((error) => {
+            console.log(error)
             this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
         });
+
     };
 
     handleButtonClick = () => {
-
         var fileReader = new FileReader();
         fileReader.onload = (evt) => {
             let fileResult = evt.target.result;
@@ -52,16 +65,19 @@ class GetEmail extends Component {
                 let strOfEml = ab2str(fileResult);
                 emlformat.read(strOfEml, (error, data) => {
                     if (error){
+                        console.log(error)
                         this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
                     }
-                    this.sendGatheredInfo(data);
+                    else {
+                        this.sendGatheredInfoEml(data);
+                    }
                 });
 
             }
             else if(fileName.endsWith(".msg")) {
                 let msg = new MsgReader(evt.target.result);
                 let data = msg.getFileData();
-                this.sendGatheredInfo(data);
+                this.sendGatheredInfoMsg(data);
             }
             else {
                 this.growl.show({severity: 'error', summary: 'Error', detail: "File is neither msg nor eml"});
@@ -97,21 +113,45 @@ class GetEmail extends Component {
         return parsedHeaders;
     };
 
-    sendGatheredInfo = (parsedEmailResult) => {
+    sendGatheredInfoMsg = (parsedEmailResult) => {
         let postObject = {...this.state, parsedEmailResult};
+        console.log(postObject)
 
-        let recipients = postObject.parsedEmailResult.recipients.map((item) => item.email);
+        if (postObject.parsedEmailResult.subject) {
+            let recipients = postObject.parsedEmailResult.recipients.map((item) => item.email);
+            this.addNewEmail(postObject.parsedEmailResult.body.toString(), this.state.checkedSystemName, postObject.file.name.toString(), this.state.adSoyad.toString(), recipients, this.getMsgDate(postObject.parsedEmailResult.headers).toString(), postObject.parsedEmailResult.senderEmail.toString(), postObject.parsedEmailResult.senderName.toString(), postObject.parsedEmailResult.subject.toString());
+        }else {
+            let recipients = postObject.parsedEmailResult.recipients.map((item) => item.name);
+            this.addNewEmail(postObject.parsedEmailResult.body.toString(), this.state.checkedSystemName, postObject.file.name.toString(), this.state.adSoyad.toString(), recipients, this.getMsgDate(postObject.parsedEmailResult.headers).toString(), "", postObject.parsedEmailResult.senderName.toString(), "");
+        }
+    };
 
-        this.addNewEmail(postObject.parsedEmailResult.body.toString(), this.state.checkedSystemName, postObject.file.name.toString(), this.state.adSoyad.toString(), recipients, this.getMsgDate(postObject.parsedEmailResult.headers).toString(), postObject.parsedEmailResult.senderEmail.toString(), postObject.parsedEmailResult.subject.toString());
+    sendGatheredInfoEml = (parsedEmailResult) => {
+        let postObject = {...this.state, parsedEmailResult};
+        let recipients = [];
+        if (postObject.parsedEmailResult.cc){
+            if(postObject.parsedEmailResult.cc.length > 0){
+                recipients = postObject.parsedEmailResult.cc.map((item) => item.email);
+            }
+            else {
+                recipients.push(postObject.parsedEmailResult.cc.email);
+            }
+        }
 
-            /* axios.post("http://localhost:8080/gonderileceklink", postObject)
-                 .then((result) => {
-                     this.growl.show({severity: 'success', summary: 'Başarılı', detail: "İşlem Başarılı"});
-                     this.setState({basariylaGonderdi: true});
-                 })
-                 .catch((error) => {
-                     this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
-                 });*/
+        if(postObject.parsedEmailResult.to.length > 0){
+            postObject.parsedEmailResult.to.forEach((item) => {
+                recipients.push(item.email);
+            });
+        }
+        else {
+            recipients.push(postObject.parsedEmailResult.to.email);
+        }
+
+        if(postObject.parsedEmailResult.subject){
+            this.addNewEmail(postObject.parsedEmailResult.text.toString(), this.state.checkedSystemName, postObject.file.name.toString(), this.state.adSoyad.toString(), recipients, postObject.parsedEmailResult.date.toString(), postObject.parsedEmailResult.from.email.toString(), postObject.parsedEmailResult.from.name.toString(), postObject.parsedEmailResult.subject.toString());
+        }else{
+            this.addNewEmail(postObject.parsedEmailResult.text.toString(), this.state.checkedSystemName, postObject.file.name.toString(), this.state.adSoyad.toString(), recipients, postObject.parsedEmailResult.date.toString(), postObject.parsedEmailResult.from.email.toString(), postObject.parsedEmailResult.from.name.toString(), "");
+        }
     };
 
     handleCheckedSystemNameSelect = (e) => {
@@ -129,7 +169,7 @@ class GetEmail extends Component {
             return {label: ""+ val, value: val};
         });
 
-        let giris = <div>
+        let giris = <div className="myPanelWrapper" >
             <Panel className="myPanel" bordered header={"The our purpose of the research"}>
                 <Row className="myRow">
                     <Col className="kelimeler">
@@ -154,7 +194,18 @@ class GetEmail extends Component {
             </Panel>
         </div>;
 
-        let icerik = <div>
+                    //error veriyorsa validationlar için yap
+        let fullNameInputClassName = "myInput";
+        if(this.state.fullnameError){
+            fullNameInputClassName += " has-error";
+        }
+
+        let fullNameLabelClassName = "kelimeler";
+        if(this.state.fullnameError){
+            fullNameLabelClassName += " has-error";
+        }
+
+        let icerik = <div className="myPanelWrapper" >
             <Panel className="myPanel" bordered header={"This tool automatically removes your personal data (email address, name etc.)"}>
                 <Row className="myRow">
                     <Col xs={6} md={6} className="kelimeler">If you allow us to access you for further enquiries regarding GDPR and Blockchain, please click the consent button</Col>
@@ -177,9 +228,9 @@ class GetEmail extends Component {
                     </Col>
                 </Row>
                 <Row className="myRow" hidden={this.state.isimGizliMi !== "Evet"}>
-                    <Col xs={6} md={6} className="kelimeler">Full Name</Col>
+                    <Col xs={6} md={6} className={fullNameLabelClassName}>Full Name</Col>
                     <Col xs={6} md={4}>
-                        <InputText className="myInput" value={this.state.adSoyad} onChange={(e) => {
+                        <InputText className={fullNameInputClassName} value={this.state.adSoyad} onChange={(e) => {
                             this.setState({adSoyad: e.target.value})
                         }}
                         />
@@ -220,10 +271,10 @@ class GetEmail extends Component {
 
                 </Row>
             </Panel>
-            <Col className="uyari">If you don't know how to convert your email to an eml or msg file, please forward your email to [your email address].</Col>
+            <Col className="uyari myPanelWrapper">If you don't know how to convert your email to an eml or msg file, please forward your email to [your email address].</Col>
         </div>;
 
-        let son  = <div>
+        let son  = <div className="myPanelWrapper" >
                 <Row>
                     <Col className="basarili">The operation is succesfully completed. </Col>
                 </Row>

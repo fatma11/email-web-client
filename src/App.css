@@ -29,3 +29,8 @@
     transform: rotate(360deg);
   }
 }
+
+.has-error, .has-error > *, .has-error > * > *, .has-error > * > * > *  {
+  color: red !important;
+  border-color: red !important;
+}

@@ -20,10 +20,14 @@
     text-align: left;
 }
 
+.myPanelWrapper {
+    text-align: center;
+}
+
 .myPanel{
     margin-top: 10px;
     width: 1000px;
-    margin-left: 440px;
+    display: inline-block;
     text-align: left;
     font-size: 16px;
 }
@@ -35,11 +39,11 @@
 .uyari{
     margin-top: 20px;
     width: 1000px;
-    margin-left: 430px;
     text-align: left;
     font-size: 16px;
     color: #e08000;
     font-weight: bold;
+    display: inline-block;
 }
 
 .basarili {
