@@ -3,7 +3,6 @@ import {RadioButton} from 'primereact/radiobutton';
 import {InputText} from 'primereact/inputtext';
 import {Col, Row, Button} from 'react-bootstrap';
 import './GetEmail.css';
-import axios from 'axios';
 import FileUpload from "../core/FileUpload";
 import MsgReader from '@freiraum/msgreader';
 import {Panel} from 'primereact/panel';
@@ -28,17 +27,6 @@ class GetEmail extends Component {
 
     addNewEmail = (body, distributedLedgerSystem, filename, fullname, recipientEmails, senderDate, senderEmail, senderName, subject) => {
 
-        console.log(body)
-        console.log(distributedLedgerSystem)
-        console.log(filename)
-        console.log(fullname)
-        console.log(recipientEmails)
-        console.log(senderDate)
-        console.log(senderEmail)
-        console.log(senderName)
-        console.log(subject)
-
-
         firebase.firestore().collection('emails').add({
             body: body,
             distributed_ledger_system: distributedLedgerSystem,
@@ -50,10 +38,9 @@ class GetEmail extends Component {
             sender_name: senderName ,
             subject: subject
         }).catch((error) => {
-            console.log(error)
             this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
         });
-
+        this.setState({basariylaGonderdi:true});
     };
 
     handleButtonClick = () => {
@@ -65,7 +52,6 @@ class GetEmail extends Component {
                 let strOfEml = ab2str(fileResult);
                 emlformat.read(strOfEml, (error, data) => {
                     if (error){
-                        console.log(error)
                         this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
                     }
                     else {
@@ -115,8 +101,6 @@ class GetEmail extends Component {
 
     sendGatheredInfoMsg = (parsedEmailResult) => {
         let postObject = {...this.state, parsedEmailResult};
-        console.log(postObject)
-
         if (postObject.parsedEmailResult.subject) {
             let recipients = postObject.parsedEmailResult.recipients.map((item) => item.email);
             this.addNewEmail(postObject.parsedEmailResult.body.toString(), this.state.checkedSystemName, postObject.file.name.toString(), this.state.adSoyad.toString(), recipients, this.getMsgDate(postObject.parsedEmailResult.headers).toString(), postObject.parsedEmailResult.senderEmail.toString(), postObject.parsedEmailResult.senderName.toString(), postObject.parsedEmailResult.subject.toString());
@@ -187,6 +171,8 @@ class GetEmail extends Component {
                     <Col><Button onClick={() => {
                         if(this.state.checked === true){
                             this.setState({next : true})
+                        }else{
+                            this.growl.show({severity: 'info', summary: 'Info Message', detail: 'Please click the checkbox to continue'});
                         }
                     }} variant="primary">Next</Button></Col>
 
@@ -289,8 +275,7 @@ class GetEmail extends Component {
 
         if(this.state.next && !this.state.basariylaGonderdi){
             giris = icerik;
-        } ;
-
+        };
 
         return <div>
             <Growl ref={(el) => this.growl = el} />
