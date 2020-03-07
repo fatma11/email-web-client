@@ -43,37 +43,61 @@ class GetEmail extends Component {
         this.setState({basariylaGonderdi:true});
     };
 
-    handleButtonClick = () => {
-        var fileReader = new FileReader();
-        fileReader.onload = (evt) => {
-            let fileResult = evt.target.result;
-            let fileName = this.state.file.name;
-            if(fileName.endsWith(".eml")){
-                let strOfEml = ab2str(fileResult);
-                emlformat.read(strOfEml, (error, data) => {
-                    if (error){
-                        this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
-                    }
-                    else {
-                        this.sendGatheredInfoEml(data);
-                    }
-                });
+    kurallarUygun = () => {
+        var uygun = true;
 
+        if(this.state.isimGizliMi || typeof(this.state.isimGizliMi) === 'undefined' || this.state.isimGizliMi == null){
+            if((this.state.isimGizliMi === 'Evet' && !this.state.adSoyad) || typeof(this.state.isimGizliMi) === 'undefined'){
+                this.setState({fullnameError: true});
+                uygun = false;
             }
-            else if(fileName.endsWith(".msg")) {
-                let msg = new MsgReader(evt.target.result);
-                let data = msg.getFileData();
-                this.sendGatheredInfoMsg(data);
+        }
+
+        if(this.state.checkedSystem || typeof(this.state.checkedSystem) === 'undefined' || this.state.checkedSystem == null){
+            if(this.state.checkedSystemName.length <= 0){
+                this.setState({fullCheckedSystemNameError: true});
+                uygun = false;
+            }
+        }
+
+        return uygun;
+    };
+
+    handleButtonClick = () => {
+        if(this.kurallarUygun()){
+            var fileReader = new FileReader();
+            fileReader.onload = (evt) => {
+                let fileResult = evt.target.result;
+                let fileName = this.state.file.name;
+                if(fileName.endsWith(".eml")){
+                    let strOfEml = ab2str(fileResult);
+                    emlformat.read(strOfEml, (error, data) => {
+                        if (error){
+                            this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
+                        }
+                        else {
+                            this.sendGatheredInfoEml(data);
+                        }
+                    });
+
+                }
+                else if(fileName.endsWith(".msg")) {
+                    let msg = new MsgReader(evt.target.result);
+                    let data = msg.getFileData();
+                    this.sendGatheredInfoMsg(data);
+                }
+                else {
+                    this.growl.show({severity: 'error', summary: 'Error', detail: "File is neither msg nor eml"});
+                }
+            };
+            if(this.state.file) {
+                fileReader.readAsArrayBuffer(this.state.file);
             }
             else {
-                this.growl.show({severity: 'error', summary: 'Error', detail: "File is neither msg nor eml"});
+                this.growl.show({severity: 'error', summary: 'Error', detail: "File is not uploaded"});
             }
-        };
-        if(this.state.file) {
-            fileReader.readAsArrayBuffer(this.state.file);
-        }
-        else {
-            this.growl.show({severity: 'error', summary: 'Error', detail: "File is not uploaded"});
+        }else {
+            this.growl.show({severity: 'info', summary: 'Info Message', detail: 'Please fill in the required fields'});
         }
 
     };
@@ -191,10 +215,20 @@ class GetEmail extends Component {
             fullNameLabelClassName += " has-error";
         }
 
+        let fullCheckedSystemNameInputClassName = "myInput";
+        if(this.state.fullCheckedSystemNameError){
+            fullCheckedSystemNameInputClassName += " has-error";
+        }
+
+        let fullCheckedSystemNameLabelClassName = "kelimeler";
+        if(this.state.fullCheckedSystemNameError){
+            fullCheckedSystemNameLabelClassName += " has-error";
+        }
+
         let icerik = <div className="myPanelWrapper" >
             <Panel className="myPanel" bordered header={"This tool automatically removes your personal data (email address, name etc.)"}>
                 <Row className="myRow">
-                    <Col xs={6} md={6} className="kelimeler">If you allow us to access you for further enquiries regarding GDPR and Blockchain, please click the consent button</Col>
+                    <Col xs={6} md={6} className={fullNameLabelClassName}>If you allow us to access you for further enquiries regarding GDPR and Blockchain, please click the consent button</Col>
                     <Col xs={6} md={4}>
                         <div className="isim-radio-button">
                             <div className="isim-radio-button">
@@ -223,7 +257,7 @@ class GetEmail extends Component {
                     </Col>
                 </Row>
                 <Row className="myRow">
-                    <Col xs={6} md={6} className="kelimeler">Distributed Ledger Systems</Col>
+                    <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>Distributed Ledger Systems</Col>
                     <Col md="auto">
                         <Select options={valueDeger} isMulti={true} className="myInput" onChange={e => this.handleCheckedSystemNameSelect(e)}/>
                     </Col>
@@ -235,7 +269,7 @@ class GetEmail extends Component {
                 <Row className="myRow" hidden={this.state.checkedSystem !== true}>
                     <Col xs={6} md={6} ></Col>
                     <Col xs={6} md={4}>
-                        <InputText className="myInput" value={this.state.checkedSystemName} onChange={(e) => {
+                        <InputText className={fullCheckedSystemNameInputClassName} value={this.state.checkedSystemName} onChange={(e) => {
                             this.setState({checkedSystemName: e.target.value})
                         }}
                         />
