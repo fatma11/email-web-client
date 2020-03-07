@@ -204,7 +204,6 @@ class GetEmail extends Component {
             </Panel>
         </div>;
 
-                    //error veriyorsa validationlar için yap
         let fullNameInputClassName = "myInput";
         if(this.state.fullnameError){
             fullNameInputClassName += " has-error";
