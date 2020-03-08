@@ -2,14 +2,14 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAe_wcOvRKuBagkPM6sZ9aQtyxXe9I1LiE",
-    authDomain: "email-d1762.firebaseapp.com",
-    databaseURL: "https://email-d1762.firebaseio.com",
-    projectId: "email-d1762",
-    storageBucket: "email-d1762.appspot.com",
-    messagingSenderId: "205986578330",
-    appId: "1:205986578330:web:9a8f5729a300a4b5e80423"
-}
+    apiKey: "AIzaSyAni7NU8bOOkCSYUeLYhrnMHl24MXQ2OOQ",
+    authDomain: "email-ac4fc.firebaseapp.com",
+    databaseURL: "https://email-ac4fc.firebaseio.com",
+    projectId: "email-ac4fc",
+    storageBucket: "email-ac4fc.appspot.com",
+    messagingSenderId: "778820633967",
+    appId: "1:778820633967:web:ded0b8e0d6e95f5928949a"
+};
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
