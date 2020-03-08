@@ -37,10 +37,12 @@ class GetEmail extends Component {
             sender_name: senderName ,
             subject: subject
         }).catch((error) => {
-            console.log(error)
-            error = true;
-            this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
+            console.log(error);
+            this.setState({basariylaGonderdi:false});
+            this.growl.show({severity: 'error', summary: 'Error', detail: "Database connection is lost"});
         });
+
+        this.setState({basariylaGonderdi:true});
     };
 
     kurallarUygun = () => {
