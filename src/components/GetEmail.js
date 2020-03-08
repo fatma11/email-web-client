@@ -26,7 +26,6 @@ class GetEmail extends Component {
     };
 
     addNewEmail = (body, distributedLedgerSystem, filename, fullname, recipientEmails, senderDate, senderEmail, senderName, subject) => {
-
         firebase.firestore().collection('emails').add({
             body: body,
             distributed_ledger_system: distributedLedgerSystem,
@@ -38,9 +37,10 @@ class GetEmail extends Component {
             sender_name: senderName ,
             subject: subject
         }).catch((error) => {
+            console.log(error)
+            error = true;
             this.growl.show({severity: 'error', summary: 'Error', detail: "error"});
         });
-        this.setState({basariylaGonderdi:true});
     };
 
     kurallarUygun = () => {
@@ -290,7 +290,7 @@ class GetEmail extends Component {
 
                 </Row>
             </Panel>
-            <Col className="uyari myPanelWrapper">If you don't know how to convert your email to an eml or msg file, please forward your email to [your email address].</Col>
+            <Col className="uyari myPanelWrapper">If you don't know how to convert your email to an eml or msg file, please forward your email to [infogdpr20@gmail.com].</Col>
         </div>;
 
         let son  = <div className="myPanelWrapper" >
