@@ -22,15 +22,47 @@ class GetEmail extends Component {
         checkedSystemName: [],
         file: null,
         fileBase64: null,
-        basariylaGonderdi: false
+        basariylaGonderdi: false,
+        useremail: ""
     };
 
-    addNewEmail = (body, distributedLedgerSystem, filename, fullname, recipientEmails, senderDate, senderEmail, senderName, subject) => {
+    addNewEmail = (body, distributedLedgerSystem, filename, fullname, email, recipientEmails, senderDate, senderEmail, senderName, subject) => {
+        if(!body){
+            body=null;
+        }
+        if(!distributedLedgerSystem){
+            distributedLedgerSystem=null;
+        }
+        if(!filename){
+            filename=null;
+        }
+        if(!fullname){
+            fullname=null;
+        }
+        if(!email){
+            email=null;
+        }
+        if(!recipientEmails){
+            recipientEmails=null;
+        }
+        if(!senderDate){
+            senderDate=null;
+        }
+        if(!senderEmail){
+            senderEmail=null;
+        }
+        if(!senderName){
+            senderName=null;
+        }
+        if(!subject){
+            subject=null;
+        }
         firebase.firestore().collection('emails').add({
             body: body,
             distributed_ledger_system: distributedLedgerSystem,
             filename: filename,
             fullname: fullname,
+            email: email,
             recipient_emails: recipientEmails,
             sender_date: senderDate,
             sender_email: senderEmail,
@@ -49,7 +81,7 @@ class GetEmail extends Component {
         var uygun = true;
 
         if (this.state.isimGizliMi || typeof(this.state.isimGizliMi) === 'undefined' || this.state.isimGizliMi == null) {
-            if ((this.state.isimGizliMi === 'Evet' && !this.state.adSoyad) || typeof(this.state.isimGizliMi) === 'undefined') {
+            if ((this.state.isimGizliMi === 'Evet' && !this.state.adSoyad) || typeof(this.state.isimGizliMi) === 'undefined' || (this.state.isimGizliMi === 'Evet' && !this.state.useremail)) {
                 this.setState({fullnameError: true});
                 uygun = false;
             }
@@ -127,13 +159,13 @@ class GetEmail extends Component {
 
     sendGatheredInfoMsg = (parsedEmailResult) => {
         let postObject = {...this.state, parsedEmailResult};
-        if (postObject.parsedEmailResult.subject) {
-            let recipients = postObject.parsedEmailResult.recipients.map((item) => item.email);
-            this.addNewEmail(postObject.parsedEmailResult.body.toString(), this.state.checkedSystemName, postObject.file.name.toString(), this.state.adSoyad.toString(), recipients, this.getMsgDate(postObject.parsedEmailResult.headers).toString(), postObject.parsedEmailResult.senderEmail.toString(), postObject.parsedEmailResult.senderName.toString(), postObject.parsedEmailResult.subject.toString());
+        let recipients;
+        if (parsedEmailResult.recipients[0].email) {
+             recipients = postObject.parsedEmailResult.recipients.map((item) => item.email);
         } else {
-            let recipients = postObject.parsedEmailResult.recipients.map((item) => item.name);
-            this.addNewEmail(postObject.parsedEmailResult.body.toString(), this.state.checkedSystemName, postObject.file.name.toString(), this.state.adSoyad.toString(), recipients, this.getMsgDate(postObject.parsedEmailResult.headers).toString(), "", postObject.parsedEmailResult.senderName.toString(), "");
+             recipients = postObject.parsedEmailResult.recipients.map((item) => item.name);
         }
+        this.addNewEmail(postObject.parsedEmailResult.body, this.state.checkedSystemName, postObject.file.name, this.state.adSoyad, this.state.useremail, recipients, this.getMsgDate(postObject.parsedEmailResult.headers), postObject.parsedEmailResult.senderEmail, postObject.parsedEmailResult.senderName, postObject.parsedEmailResult.subject);
     };
 
     sendGatheredInfoEml = (parsedEmailResult) => {
@@ -141,27 +173,39 @@ class GetEmail extends Component {
         let recipients = [];
         if (postObject.parsedEmailResult.cc) {
             if (postObject.parsedEmailResult.cc.length > 0) {
-                recipients = postObject.parsedEmailResult.cc.map((item) => item.email);
+                if (postObject.parsedEmailResult.cc[0].email) {
+                    recipients = postObject.parsedEmailResult.cc.map((item) => item.email);
+                } else {
+                    recipients = postObject.parsedEmailResult.cc.map((item) => item.name);
+                }
             }
             else {
-                recipients.push(postObject.parsedEmailResult.cc.email);
+                if(postObject.parsedEmailResult.cc.email){
+                    recipients.push(postObject.parsedEmailResult.cc.email);
+                }else{
+                    recipients.push(postObject.parsedEmailResult.cc.name);
+                }
             }
         }
 
         if (postObject.parsedEmailResult.to.length > 0) {
             postObject.parsedEmailResult.to.forEach((item) => {
-                recipients.push(item.email);
+                if(item.email){
+                    recipients.push(item.email);
+                }else{
+                    recipients.push((item.name))
+                }
             });
         }
         else {
-            recipients.push(postObject.parsedEmailResult.to.email);
+            if(postObject.parsedEmailResult.to.email){
+                recipients.push(postObject.parsedEmailResult.to.email);
+            }else{
+                recipients.push(postObject.parsedEmailResult.to.name);
+            }
         }
 
-        if (postObject.parsedEmailResult.subject) {
-            this.addNewEmail(postObject.parsedEmailResult.text.toString(), this.state.checkedSystemName, postObject.file.name.toString(), this.state.adSoyad.toString(), recipients, postObject.parsedEmailResult.date.toString(), postObject.parsedEmailResult.from.email.toString(), postObject.parsedEmailResult.from.name.toString(), postObject.parsedEmailResult.subject.toString());
-        } else {
-            this.addNewEmail(postObject.parsedEmailResult.text.toString(), this.state.checkedSystemName, postObject.file.name.toString(), this.state.adSoyad.toString(), recipients, postObject.parsedEmailResult.date.toString(), postObject.parsedEmailResult.from.email.toString(), postObject.parsedEmailResult.from.name.toString(), "");
-        }
+        this.addNewEmail(postObject.parsedEmailResult.text, this.state.checkedSystemName, postObject.file.name, this.state.adSoyad, this.state.useremail, recipients, postObject.parsedEmailResult.date, postObject.parsedEmailResult.from.email, postObject.parsedEmailResult.from.name, postObject.parsedEmailResult.subject);
     };
 
     handleCheckedSystemNameSelect = (e) => {
@@ -183,7 +227,7 @@ class GetEmail extends Component {
             <div className="myPanelWrapper">
                 <Panel className="myPanel">
                     <Row className="myRow">
-                        <Col  md={2} className="kelimeler bold">Title of project:</Col>
+                        <Col md={2} className="kelimeler bold">Title of project:</Col>
                         <Col className="kelimeler">GDPR notification emails</Col>
                     </Row>
                 </Panel>
@@ -203,33 +247,40 @@ class GetEmail extends Component {
 
                 </Panel>
 
-                <Panel className="myPanel"  bordered header={"Consent Form"}>
+                <Panel className="myPanel" bordered header={"Consent Form"}>
                     <Row className="myRow">
                         <Col xs={6} md={9} className="kelimeler">If you want to share your mail with us, please click
                             the checkboxes to consent.</Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">1- I confirm I have read and understand the information the purpose of the research for the above study.</Col>
+                        <Col xs={6} md={9} className="kelimeler">1- I confirm I have read and understand the information
+                            the purpose of the research for the above study.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked1: e.checked})}
                                         checked={this.state.checked1}></Checkbox></Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">2- I understand that my participation is voluntary and that I am free to withdraw at any time without giving any reason. Please contact [infogdpr20@gmail.com] if you would like to withdraw.</Col>
+                        <Col xs={6} md={9} className="kelimeler">2- I understand that my participation is voluntary and
+                            that I am free to withdraw at any time without giving any reason. Please contact
+                            [infogdpr20@gmail.com] if you would like to withdraw.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked2: e.checked})}
                                         checked={this.state.checked2}></Checkbox></Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">3- I understand that my responses will be anonymised before analysis.  I give permission for members of the research team to have access to my anonymised responses.</Col>
+                        <Col xs={6} md={9} className="kelimeler">3- I understand that my responses will be anonymised
+                            before analysis. I give permission for members of the research team to have access to my
+                            anonymised responses.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked3: e.checked})}
                                         checked={this.state.checked3}></Checkbox></Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">4- I agree that the email is stored in Firebase under Google's control.</Col>
+                        <Col xs={6} md={9} className="kelimeler">4- I agree that the email is stored in Firebase under
+                            Google's control.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked4: e.checked})}
                                         checked={this.state.checked4}></Checkbox></Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">5- I agree to take part in the above research project.</Col>
+                        <Col xs={6} md={9} className="kelimeler">5- I agree to take part in the above research
+                            project.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked5: e.checked})}
                                         checked={this.state.checked5}></Checkbox></Col>
                     </Row>
@@ -280,8 +331,8 @@ class GetEmail extends Component {
             <Panel className="myPanel" bordered
                    header={"This tool automatically removes your personal data (email address, name etc.)"}>
                 <Row className="myRow">
-                    <Col xs={6} md={6} className={fullNameLabelClassName}>If you allow us to access you for further
-                        enquiries regarding GDPR and Blockchain, please click the consent button</Col>
+                    <Col xs={6} md={6} className={fullNameLabelClassName}>If you allow us to contact you for further
+                        enquiries, please select 'Yes', otherwise select 'No'.</Col>
                     <Col xs={6} md={4}>
                         <div className="isim-radio-button">
                             <div className="isim-radio-button">
@@ -309,7 +360,16 @@ class GetEmail extends Component {
                         />
                     </Col>
                 </Row>
-                <Row className="myRow">
+                <Row className="myRow" hidden={this.state.isimGizliMi !== "Evet"}>
+                    <Col xs={6} md={6} className={fullNameLabelClassName}>Email</Col>
+                    <Col xs={6} md={4}>
+                        <InputText className={fullNameInputClassName} value={this.state.useremail} onChange={(e) => {
+                            this.setState({useremail: e.target.value})
+                        }}
+                        />
+                    </Col>
+                </Row>
+                <Row className="myRow" hidden={this.state.checkedSystem === true}>
                     <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>Distributed Ledger Systems</Col>
                     <Col md="auto">
                         <Select options={valueDeger} isMulti={true} className="myInput"
@@ -322,13 +382,18 @@ class GetEmail extends Component {
                     </Col>
                 </Row>
                 <Row className="myRow" hidden={this.state.checkedSystem !== true}>
-                    <Col xs={6} md={6}></Col>
+                    <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>Distributed Ledger Systems</Col>
                     <Col xs={6} md={4}>
                         <InputText className={fullCheckedSystemNameInputClassName} value={this.state.checkedSystemName}
                                    onChange={(e) => {
                                        this.setState({checkedSystemName: e.target.value})
                                    }}
                         />
+                    </Col>
+                    <Col>
+                        <Checkbox onChange={e => this.setState({checkedSystem: e.checked})}
+                                  checked={this.state.checkedSystem}></Checkbox>
+                        <label htmlFor="cb1" className="p-checkbox-label">Other</label>
                     </Col>
                 </Row>
                 <Row className="myRow">
