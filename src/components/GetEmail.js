@@ -23,7 +23,8 @@ class GetEmail extends Component {
         file: null,
         fileBase64: null,
         basariylaGonderdi: false,
-        useremail: ""
+        useremail: "",
+        isimGizliMi: "Hayir"
     };
 
     addNewEmail = (body, distributedLedgerSystem, filename, fullname, email, recipientEmails, senderDate, senderEmail, senderName, subject) => {
