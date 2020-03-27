@@ -31,10 +31,9 @@ class GetEmail extends Component {
 
     componentDidMount() {
         axios
-            .get('https://api.udilia.com/coins/v1/cryptocurrencies/')
+            .get('https://api.coincap.io/v2/assets?limit=2000')
             .then(res => {
-                const currencies = res.data.currencies;
-
+                const currencies = res.data.data;
                 const valueDeger = currencies.map((val) => {
                     return {label: "" + val.name, value: val.name};
                 });
@@ -233,15 +232,20 @@ class GetEmail extends Component {
                         <Col md={2} className="kelimeler bold">Title of project:</Col>
                         <Col className="kelimeler">GDPR notification emails</Col>
                     </Row>
+                    <Row className="myRow">
+                        <Col md={2} className="kelimeler bold">The research team:</Col>
+                        <Col className="kelimeler">Shujun Li, Rahime Belen-Saglam, Muhammed Abdullah Bülbül, Fatma Emül</Col>
+                    </Row>
                 </Panel>
 
 
                 <Panel className="myPanel" bordered header={"The our purpose of the research"}>
                     <Row className="myRow">
                         <Col className="kelimeler">
-                            We want to better understand how blockchain service providers and developers
-                            communicate GDPR to their users via email and how their users perceive GDPR and such email
-                            communications. A better
+                            We are conducting this
+                            research in order to better understand how blockchain service providers
+                            and developers communicated GDPR to their users via email and how their
+                            users perceived GDPR and such email communications. A better
                             understanding will help the whole sector to find better ways to make blockchain systems more
                             GDPR friendly.
                             We will not do "name and shame" thing.
@@ -252,12 +256,12 @@ class GetEmail extends Component {
 
                 <Panel className="myPanel" bordered header={"Consent Form"}>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">If you want to share your mail with us, please click
-                            the checkboxes to consent.</Col>
+                        <Col xs={6} md={9} className="kelimeler">If you want to share your email address with us, please
+                            click the check boxes to give your consent.</Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">1- I confirm I have read and understand the information
-                            the purpose of the research for the above study.</Col>
+                        <Col xs={6} md={9} className="kelimeler">1- I confirm I have read and understood
+                            the purpose of the research described above.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked1: e.checked})}
                                         checked={this.state.checked1}></Checkbox></Col>
                     </Row>
@@ -276,8 +280,9 @@ class GetEmail extends Component {
                                         checked={this.state.checked3}></Checkbox></Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">4- I agree that the email is stored in Firebase under
-                            Google's control.</Col>
+                        <Col xs={6} md={9} className="kelimeler">4- I give my consent for my email address being stored in Firebase
+                            under Google's control, which will be deleted once the research is
+                            completed.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked4: e.checked})}
                                         checked={this.state.checked4}></Checkbox></Col>
                     </Row>
@@ -373,7 +378,7 @@ class GetEmail extends Component {
                     </Col>
                 </Row>
                 <Row className="myRow" hidden={this.state.checkedSystem === true}>
-                    <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>Distributed Ledger Systems</Col>
+                    <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>Distributed ledger system for which you received a GDPR email</Col>
                     <Col md="auto">
                         <Select options={this.state.valueDeger} isMulti={false} className="myInput"
                                 onChange={(e) => {
@@ -386,7 +391,7 @@ class GetEmail extends Component {
                     </Col>
                 </Row>
                 <Row className="myRow" hidden={this.state.checkedSystem !== true}>
-                    <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>Distributed Ledger Systems</Col>
+                    <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>Distributed ledger system for which you received a GDPR email</Col>
                     <Col xs={6} md={4}>
                         <InputText className={fullCheckedSystemNameInputClassName} value={this.state.checkedSystemName}
                                    onChange={(e) => {
@@ -401,8 +406,8 @@ class GetEmail extends Component {
                     </Col>
                 </Row>
                 <Row className="myRow">
-                    <Col xs={6} md={6} className="kelimeler">File (Please upload the file extension in eml or msg
-                        format)</Col>
+                    <Col xs={6} md={6} className="kelimeler">GDPR
+                        email you received (please upload as an .eml or a .msg file)</Col>
                     <Col>
                         <FileUpload value={this.state.fileBase64} onChange={(newFileBase64, newFile) => {
                             this.setState({fileBase64: newFileBase64, file: newFile})
