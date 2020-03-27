@@ -11,6 +11,7 @@ import {Growl} from 'primereact/growl';
 import {Checkbox} from 'primereact/checkbox';
 import Select from 'react-select';
 import firebase from './firebase'
+import axios from 'axios';
 
 function ab2str(buf) {
     return new TextDecoder("utf-8").decode(buf);
@@ -24,8 +25,23 @@ class GetEmail extends Component {
         fileBase64: null,
         basariylaGonderdi: false,
         useremail: "",
-        isimGizliMi: "Hayir"
+        isimGizliMi: "Hayir",
+        valueDeger: []
     };
+
+    componentDidMount() {
+        axios
+            .get('https://api.udilia.com/coins/v1/cryptocurrencies/')
+            .then(res => {
+                const currencies = res.data.currencies;
+
+                const valueDeger = currencies.map((val) => {
+                    return {label: "" + val.name, value: val.name};
+                });
+
+                this.setState({valueDeger: valueDeger});
+            })
+    }
 
     addNewEmail = (body, distributedLedgerSystem, filename, fullname, email, recipientEmails, senderDate, senderEmail, senderName, subject) => {
         if(!body){
@@ -209,21 +225,7 @@ class GetEmail extends Component {
         this.addNewEmail(postObject.parsedEmailResult.text, this.state.checkedSystemName, postObject.file.name, this.state.adSoyad, this.state.useremail, recipients, postObject.parsedEmailResult.date, postObject.parsedEmailResult.from.email, postObject.parsedEmailResult.from.name, postObject.parsedEmailResult.subject);
     };
 
-    handleCheckedSystemNameSelect = (e) => {
-        let valueMap = e.map((item) => item.value);
-        this.setState({checkedSystemName: valueMap});
-    };
-
-
     render() {
-        const cryptocurrencies = require('cryptocurrencies');
-
-        const valuelar = Object.values(cryptocurrencies);
-
-        const valueDeger = valuelar.map((val) => {
-            return {label: "" + val, value: val};
-        });
-
         let giris =
             <div className="myPanelWrapper">
                 <Panel className="myPanel">
@@ -373,8 +375,9 @@ class GetEmail extends Component {
                 <Row className="myRow" hidden={this.state.checkedSystem === true}>
                     <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>Distributed Ledger Systems</Col>
                     <Col md="auto">
-                        <Select options={valueDeger} isMulti={true} className="myInput"
-                                onChange={e => this.handleCheckedSystemNameSelect(e)}/>
+                        <Select options={this.state.valueDeger} isMulti={false} className="myInput"
+                                onChange={(e) => {
+                                    this.setState({checkedSystemName: e.value})}}/>
                     </Col>
                     <Col>
                         <Checkbox onChange={e => this.setState({checkedSystem: e.checked})}
@@ -430,12 +433,10 @@ class GetEmail extends Component {
         if (this.state.basariylaGonderdi) {
             giris = son;
         }
-        ;
 
         if (this.state.next && !this.state.basariylaGonderdi) {
             giris = icerik;
         }
-        ;
 
         return <div>
             <Growl ref={(el) => this.growl = el}/>
