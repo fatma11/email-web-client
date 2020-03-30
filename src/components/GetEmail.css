@@ -24,13 +24,7 @@
     text-align: center;
 }
 
-.myPanel{
-    margin-top: 10px;
-    width: 1000px;
-    display: inline-block;
-    text-align: left;
-    font-size: 16px;
-}
+
 
 .submitButton{
     text-align: right;
@@ -64,12 +58,22 @@
     font-weight: bold;
 }
 
-@media only screen and (max-width: 1000px) {
-    .mypanel{
+
+.myPanel{
+    margin-top: 10px;
+    display: inline-block;
+    text-align: left;
+    font-size: 16px;
+}
+
+@media screen and (max-width: 1000px) {
+    .myPanel{
         width:auto !important;
-        margin-top: 10px;
-        display: inline-block;
-        text-align: left;
-        font-size: 16px;
+    }
+}
+
+@media screen and (min-width: 1001px) {
+    .myPanel{
+        width:1000px !important;
     }
 }
