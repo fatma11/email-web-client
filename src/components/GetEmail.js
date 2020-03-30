@@ -232,9 +232,13 @@ class GetEmail extends Component {
                         <Col md={2} className="kelimeler bold">Title of project:</Col>
                         <Col className="kelimeler">GDPR notification emails</Col>
                     </Row>
-                    <Row className="myRow">
+                    <Row>
                         <Col md={2} className="kelimeler bold">The research team:</Col>
-                        <Col className="kelimeler">Shujun Li, Rahime Belen-Saglam, Muhammed Abdullah Bülbül, Fatma Emül</Col>
+                        <Col className="kelimeler">Muhammed Abdullah Bülbül and Fatma Emül, Ankara Yıldırım Beyazıt Üniversitesi, Turkey</Col>
+                    </Row>
+                    <Row className="myRow">
+                        <Col md={2}></Col>
+                        <Col className="kelimeler">Rahime Belen-Saglam and Shujun Li, University of Kent, UK</Col>
                     </Row>
                 </Panel>
 
