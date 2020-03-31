@@ -246,13 +246,28 @@ class GetEmail extends Component {
                 <Panel className="myPanel" bordered header={"The our purpose of the research"}>
                     <Row className="myRow">
                         <Col className="kelimeler">
-                            We are conducting this
-                            research in order to better understand how blockchain service providers
-                            and developers communicated GDPR to their users via email and how their
-                            users perceived GDPR and such email communications. A better
-                            understanding will help the whole sector to find better ways to make blockchain systems more
-                            GDPR friendly.
-                            We will not do "name and shame" thing.
+                            We are conducting this research in order to better understand how
+                            blockchain service providers and developers communicated GDPR to their
+                            users via email and how their users perceived GDPR and such email
+                            communications. A better understanding will help the whole sector to
+                            find better ways to make blockchain systems more GDPR compliant and
+                            privacy friendly. We would be glad if you help us as end users of
+                            existing blockchain systems. All you have to do is to share all GDPR
+                            relatd mails you have rceived from blockchain systems and development
+                            teams you have been using. All emails we received from you will be
+                            anonymised to remove all personal data that can potentially identify you
+                            and the anonymised data will be used by the research team at the
+                            Yıldırım Beyazıt Üniversitesi in Turkey and the University of Kent in
+                            the UK (see below for their names and contact details). If you decide to
+                            share your name and your email address with us for follow-up
+                            communications (e.g., to clarify personalised content in the emails you
+                            share and to collect your personal opinions on such emails), such
+                            personal data will be stored on Firebase under Google's control (as the
+                            data collection platform) and then securely stored on the research
+                            team's computers. Such data will be kept on Firebase and the research
+                            team's computers only until the end of the research, after which they
+                            will be permanently and securely deleted from all storage media. Any
+                            research publications from this research will not include any personal data.
                         </Col>
                     </Row>
 
@@ -284,9 +299,10 @@ class GetEmail extends Component {
                                         checked={this.state.checked3}></Checkbox></Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">4- I give my consent for my email address being stored in Firebase
-                            under Google's control, which will be deleted once the research is
-                            completed.</Col>
+                        <Col xs={6} md={9} className="kelimeler">4- I understand that if I decide to share my name and email address,
+                            they will be stored in Firebase under Google's control (as the data
+                            collection platform) and on the research team's computers, which will be
+                            deleted permanently and securely once the research is completed.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked4: e.checked})}
                                         checked={this.state.checked4}></Checkbox></Col>
                     </Row>
