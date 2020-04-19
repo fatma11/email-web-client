@@ -236,9 +236,17 @@ class GetEmail extends Component {
                         <Col md={2} className="kelimeler bold">The research team:</Col>
                         <Col className="kelimeler">Muhammed Abdullah Bülbül and Fatma Emül, Ankara Yıldırım Beyazıt Üniversitesi, Turkey</Col>
                     </Row>
-                    <Row className="myRow">
+                    <Row>
+                        <Col md={2}></Col>
+                        <Col className="kelimeler">(abulbul@ybu.edu.tr, fatma.emul@tubitak.gov.tr)</Col>
+                    </Row>
+                    <Row >
                         <Col md={2}></Col>
                         <Col className="kelimeler">Rahime Belen-Saglam and Shujun Li, University of Kent, UK</Col>
+                    </Row>
+                    <Row className="myRow">
+                        <Col md={2}></Col>
+                        <Col className="kelimeler">(R.Belen-Saglam-724@kent.ac.uk, S.J.Li@kent.ac.uk)</Col>
                     </Row>
                 </Panel>
 
@@ -246,28 +254,7 @@ class GetEmail extends Component {
                 <Panel className="myPanel" bordered header={"The our purpose of the research"}>
                     <Row className="myRow">
                         <Col className="kelimeler">
-                            We are conducting this research in order to better understand how
-                            blockchain service providers and developers communicated GDPR to their
-                            users via email and how their users perceived GDPR and such email
-                            communications. A better understanding will help the whole sector to
-                            find better ways to make blockchain systems more GDPR compliant and
-                            privacy friendly. We would be glad if you help us as end users of
-                            existing blockchain systems. All you have to do is to share all GDPR
-                            relatd mails you have rceived from blockchain systems and development
-                            teams you have been using. All emails we received from you will be
-                            anonymised to remove all personal data that can potentially identify you
-                            and the anonymised data will be used by the research team at the
-                            Yıldırım Beyazıt Üniversitesi in Turkey and the University of Kent in
-                            the UK (see below for their names and contact details). If you decide to
-                            share your name and your email address with us for follow-up
-                            communications (e.g., to clarify personalised content in the emails you
-                            share and to collect your personal opinions on such emails), such
-                            personal data will be stored on Firebase under Google's control (as the
-                            data collection platform) and then securely stored on the research
-                            team's computers. Such data will be kept on Firebase and the research
-                            team's computers only until the end of the research, after which they
-                            will be permanently and securely deleted from all storage media. Any
-                            research publications from this research will not include any personal data.
+                            We are conducting this research in order to better understand how blockchain service providers and developers communicated GDPR to their users via email and how their users perceived GDPR and such email communications. A better understanding will help the whole sector to find better ways to make blockchain systems more GDPR compliant and privacy friendly. We would be glad if you help us as end users of existing blockchain systems. All you have to do is to share GDPR related mails you have received from blockchain systems and development teams you have been using. All emails we received from you will be anonymised to remove any personal data that can potentially identify you. The anonymised data will be used by the research team at the Yıldırım Beyazıt Üniversitesi in Turkey and the University of Kent in the UK (see the above or their names and contact details). If you decide to share your name and your email address with us for follow-up communications (e.g., to clarify personalised content in the emails you share and to collect your personal opinions on such emails), such personal data will be stored on Firebase under Google's control (as the data collection platform) and then securely stored on the research team's computers. Such data will be kept on Firebase and the research team's computers only until the end of the research, after which they will be permanently and securely deleted from all storage media. Any research publications from this research will not include any personal data.
                         </Col>
                     </Row>
 
@@ -275,40 +262,30 @@ class GetEmail extends Component {
 
                 <Panel className="myPanel" bordered header={"Consent Form"}>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">If you want to share your email address with us, please
-                            click the check boxes to give your consent.</Col>
+                        <Col xs={6} md={9} className="kelimeler">Please click all the check boxes below to give your consent.</Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">1- I confirm I have read and understood
-                            the purpose of the research described above.</Col>
+                        <Col xs={6} md={9} className="kelimeler">1- I confirm I have read and understood the purpose of the research described above.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked1: e.checked})}
                                         checked={this.state.checked1}></Checkbox></Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">2- I understand that my participation is voluntary and
-                            that I am free to withdraw at any time without giving any reason. Please contact
-                            [infogdpr20@gmail.com] if you would like to withdraw.</Col>
+                        <Col xs={6} md={9} className="kelimeler">2- I understand that my participation is voluntary and that I am free to withdraw at any time without giving any reason. Please contact [infogdpr20@gmail.com] if you would like to withdraw.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked2: e.checked})}
                                         checked={this.state.checked2}></Checkbox></Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">3- I understand that my responses will be anonymised
-                            before analysis. I give permission for members of the research team to have access to my
-                            anonymised responses.</Col>
+                        <Col xs={6} md={9} className="kelimeler">3- I understand that my responses will be anonymised before analysis. I give permission for members of the research team to have access to my anonymised responses.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked3: e.checked})}
                                         checked={this.state.checked3}></Checkbox></Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">4- I understand that if I decide to share my name and email address,
-                            they will be stored in Firebase under Google's control (as the data
-                            collection platform) and on the research team's computers, which will be
-                            deleted permanently and securely once the research is completed.</Col>
+                        <Col xs={6} md={9} className="kelimeler">4- I understand that if I decide to share my name and my email address, they will be stored in Firebase under Google's control (as the data collection platform) and on the research team's computers. Such data will be kept until the research is completed, after which they will be permanently and securely deleted.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked4: e.checked})}
                                         checked={this.state.checked4}></Checkbox></Col>
                     </Row>
                     <Row className="myRow">
-                        <Col xs={6} md={9} className="kelimeler">5- I agree to take part in the above research
-                            project.</Col>
+                        <Col xs={6} md={9} className="kelimeler">5- I agree to take part in the above research project.</Col>
                         <Col> <Checkbox onChange={e => this.setState({checked5: e.checked})}
                                         checked={this.state.checked5}></Checkbox></Col>
                     </Row>
@@ -357,10 +334,9 @@ class GetEmail extends Component {
 
         let icerik = <div className="myPanelWrapper">
             <Panel className="myPanel" bordered
-                   header={"This tool automatically removes your personal data (email address, name etc.)"}>
+                   header={"The email collection system will automatically remove your personal data (email address, name, IP addresses, etc.) from the submitted email."}>
                 <Row className="myRow">
-                    <Col xs={6} md={6} className={fullNameLabelClassName}>If you allow us to contact you for further
-                        enquiries, please select 'Yes', otherwise select 'No'.</Col>
+                    <Col xs={6} md={6} className={fullNameLabelClassName}>If you allow us to contact you for further enquiries, please select 'Yes', otherwise select 'No'.</Col>
                     <Col xs={6} md={4}>
                         <div className="isim-radio-button">
                             <div className="isim-radio-button">
@@ -380,7 +356,7 @@ class GetEmail extends Component {
                     </Col>
                 </Row>
                 <Row className="myRow" hidden={this.state.isimGizliMi !== "Evet"}>
-                    <Col xs={6} md={6} className={fullNameLabelClassName}>Full Name</Col>
+                    <Col xs={6} md={6} className={fullNameLabelClassName}>Full name</Col>
                     <Col xs={6} md={4}>
                         <InputText className={fullNameInputClassName} value={this.state.adSoyad} onChange={(e) => {
                             this.setState({adSoyad: e.target.value})
@@ -389,7 +365,7 @@ class GetEmail extends Component {
                     </Col>
                 </Row>
                 <Row className="myRow" hidden={this.state.isimGizliMi !== "Evet"}>
-                    <Col xs={6} md={6} className={fullNameLabelClassName}>Email</Col>
+                    <Col xs={6} md={6} className={fullNameLabelClassName}>Email address</Col>
                     <Col xs={6} md={4}>
                         <InputText className={fullNameInputClassName} value={this.state.useremail} onChange={(e) => {
                             this.setState({useremail: e.target.value})
@@ -398,7 +374,7 @@ class GetEmail extends Component {
                     </Col>
                 </Row>
                 <Row className="myRow" hidden={this.state.checkedSystem === true}>
-                    <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>Distributed ledger system for which you received a GDPR email</Col>
+                    <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>A distributed ledger system for which you received a GDPR email</Col>
                     <Col md="auto">
                         <Select options={this.state.valueDeger} isMulti={false} className="myInput"
                                 onChange={(e) => {
@@ -411,7 +387,7 @@ class GetEmail extends Component {
                     </Col>
                 </Row>
                 <Row className="myRow" hidden={this.state.checkedSystem !== true}>
-                    <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>Distributed ledger system for which you received a GDPR email</Col>
+                    <Col xs={6} md={6} className={fullCheckedSystemNameLabelClassName}>A distributed ledger system for which you received a GDPR email</Col>
                     <Col xs={6} md={4}>
                         <InputText className={fullCheckedSystemNameInputClassName} value={this.state.checkedSystemName}
                                    onChange={(e) => {
@@ -442,16 +418,15 @@ class GetEmail extends Component {
 
                 </Row>
             </Panel>
-            <Col className="uyari myPanelWrapper">If you don't know how to convert your email to an eml or msg file,
-                please forward your email to [infogdpr20@gmail.com].</Col>
+            <Col className="uyari myPanelWrapper">If you don't know how to convert your email to an .eml or .msg file, please forward your email to [infogdpr20@gmail.com].</Col>
         </div>;
 
         let son = <div className="myPanelWrapper">
             <Row>
-                <Col className="basarili">The operation is succesfully completed. </Col>
+                <Col className="basarili">Your email has been successfully received.</Col>
             </Row>
             <Row>
-                <Col className="thanks">Thank you for attention. </Col>
+                <Col className="thanks">Thank you for your contribution. </Col>
             </Row>
         </div>;
 
