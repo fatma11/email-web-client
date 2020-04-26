@@ -42,7 +42,7 @@ class GetEmail extends Component {
             })
     }
 
-    addNewEmail = (body, distributedLedgerSystem, filename, fullname, email, recipientEmails, senderDate, senderEmail, senderName, subject) => {
+    addNewEmail = (body, distributedLedgerSystem, filename, fullname, email, recipientEmails, senderDate, senderEmail, senderName, subject, raw) => {
         if(!body){
             body=null;
         }
@@ -83,7 +83,8 @@ class GetEmail extends Component {
             sender_date: senderDate,
             sender_email: senderEmail,
             sender_name: senderName,
-            subject: subject
+            subject: subject,
+            raw:raw
         }).catch((error) => {
             console.log(error);
             this.setState({basariylaGonderdi: false});
@@ -181,7 +182,7 @@ class GetEmail extends Component {
         } else {
              recipients = postObject.parsedEmailResult.recipients.map((item) => item.name);
         }
-        this.addNewEmail(postObject.parsedEmailResult.body, this.state.checkedSystemName, postObject.file.name, this.state.adSoyad, this.state.useremail, recipients, this.getMsgDate(postObject.parsedEmailResult.headers), postObject.parsedEmailResult.senderEmail, postObject.parsedEmailResult.senderName, postObject.parsedEmailResult.subject);
+        this.addNewEmail(postObject.parsedEmailResult.body, this.state.checkedSystemName, postObject.file.name, this.state.adSoyad, this.state.useremail, recipients, this.getMsgDate(postObject.parsedEmailResult.headers), postObject.parsedEmailResult.senderEmail, postObject.parsedEmailResult.senderName, postObject.parsedEmailResult.subject, postObject.parsedEmailResult);
     };
 
     sendGatheredInfoEml = (parsedEmailResult) => {
@@ -221,7 +222,7 @@ class GetEmail extends Component {
             }
         }
 
-        this.addNewEmail(postObject.parsedEmailResult.text, this.state.checkedSystemName, postObject.file.name, this.state.adSoyad, this.state.useremail, recipients, postObject.parsedEmailResult.date, postObject.parsedEmailResult.from.email, postObject.parsedEmailResult.from.name, postObject.parsedEmailResult.subject);
+        this.addNewEmail(postObject.parsedEmailResult.text, this.state.checkedSystemName, postObject.file.name, this.state.adSoyad, this.state.useremail, recipients, postObject.parsedEmailResult.date, postObject.parsedEmailResult.from.email, postObject.parsedEmailResult.from.name, postObject.parsedEmailResult.subject, postObject.parsedEmailResult);
     };
 
     render() {
